@@ -47,7 +47,7 @@ def get_channel_from_package_filepath(package_path: pathlib.Path) -> str:
     return channel
 
 
-def get_subdir_from_package_index(package_index: Dict[str, str | Dict]) -> str:
+def get_subdir_from_package_index(package_index: Dict[str, str]) -> str:
     """
     Retrieves subdir from package index, trivial function.
     Returns one of noarch, linux-64, etc.
@@ -79,7 +79,7 @@ def get_conda_package_index(package_path: pathlib.Path) -> Dict[str, str]:
     """
     with package_path.open("rb") as infile:
         with tarfile.open(mode="r", fileobj=infile) as tar:
-            binary_content = tar.extractfile("info/index.json").read()
+            binary_content = tar.extractfile("info/index.json").read() # type: ignore
     text_content = binary_content.decode("utf8")
     indexjson = json.loads(text_content)
     return indexjson
@@ -120,7 +120,7 @@ def rewrite_pkgs_dir_to_repo(pkgdir: pathlib.Path, repodir: pathlib.Path) -> Non
             package_index = get_conda_package_index(pkg)
             subdir = get_subdir_from_package_index(package_index)
             channel = normalize_channel_name(get_channel_from_package_filepath(pkg))
-            package_name = get_package_name_from_package_index(package_index)
+            package_name = get_package_name_from_package_index(package_index) # type: ignore
             outdir = repodir / channel / subdir
             os.makedirs(outdir, exist_ok=True)
             tofile = outdir / package_name
