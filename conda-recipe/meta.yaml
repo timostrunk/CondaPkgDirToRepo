@@ -1,0 +1,28 @@
+package:
+  name: condapkgdirtorepo
+  version: "1.0.0"
+about:
+  home: https://github.com/not_yet_existing
+  license: apache 
+  summary: 
+source:
+  path: ../
+build:
+  script: {{ PYTHON }} -m pip install --no-deps --ignore-installed -vv .
+  noarch: python
+requirements:
+  build:
+    - python >=3.8
+    - build
+    - flit
+    - flit-core
+  run:
+    - click
+    - python >=3.8
+test:
+  source_files:
+    - tests
+  requires:
+    - pytest
+  commands:
+    - pytest
